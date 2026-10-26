@@ -3,23 +3,6 @@ using DEKODE.OptiFlow.Domain.Entities.Exceptions;
 
 namespace DEKODE.OptiFlow.Domain.Entities;
 
-public class Planogram : EntityBase
-{
-    public string Name { get; set; } = string.Empty;
-    public string SeasonOrMonth { get; set; } = string.Empty;
-    public DateTime EffectiveDate { get; set; } = DateTime.UtcNow;
-    public bool IsActive { get; set; } = true;
-
-    public List<PlanogramLine> Lines { get; set; } = new();
-
-    public void AddLine(PlanogramLine line)
-    {
-        ArgumentNullException.ThrowIfNull(line);
-        line.Validate();
-        Lines.Add(line);
-    }
-}
-
 public class PlanogramLine : EntityBase
 {
     public int PlanogramId { get; set; }
@@ -65,31 +48,4 @@ public class PlanogramLine : EntityBase
         if (BackStock < 0)
             throw new PlanogramValidationException($"BackStock cannot be negative ({BackStock}).", StoreName, BrandName);
     }
-}
-
-public class WarehouseStockBatch : EntityBase
-{
-    public string Barcode { get; set; } = string.Empty;
-    public string ItemCode { get; set; } = string.Empty;
-    public string ItemName { get; set; } = string.Empty;
-    public string ItemCategory { get; set; } = string.Empty;
-    public string Facility { get; set; } = "Corporate Office";
-    public int BatchStock { get; set; }
-    public decimal Mrp { get; set; }
-    public int StockAgeInDays { get; set; }
-}
-
-public class StoreStock : EntityBase
-{
-    public string Facility { get; set; } = string.Empty;
-    public string ItemCode { get; set; } = string.Empty;
-    public int BatchStock { get; set; }
-}
-
-public class SalesRecord : EntityBase
-{
-    public string FacilityName { get; set; } = string.Empty;
-    public string ItemCode { get; set; } = string.Empty;
-    public int Quantity { get; set; }
-    public DateTime? OrderDate { get; set; }
 }

@@ -6,34 +6,6 @@ using MatchType = DEKODE.OptiFlow.Domain.Entities.Enums.MatchType;
 namespace DEKODE.OptiFlow.Domain.BusinessServices.Engine;
 
 /// <summary>
-/// Internal state models and lookups for the allocation waterfall run.
-/// </summary>
-public class WarehouseCatalogItem
-{
-    public required string ItemCode { get; init; }
-    public required string ItemName { get; init; }
-    public required decimal Mrp { get; init; }
-    public required int TotalStock { get; set; }
-    public required string Brand { get; init; }
-    public required CommodityType Commodity { get; init; }
-    public required ItemAttributes Attributes { get; init; }
-}
-
-public class WarehouseBatchNode
-{
-    public required string Barcode { get; init; }
-    public required int Quantity { get; set; }
-    public required int StockAgeInDays { get; init; }
-}
-
-public record CandidateEvaluation(
-    WarehouseCatalogItem Candidate,
-    double Score,
-    DEKODE.OptiFlow.Domain.Entities.Enums.MatchType MatchType,
-    string Reason
-);
-
-/// <summary>
 /// Template Method Pattern base class defining the invariant skeleton of the allocation waterfall algorithm.
 /// Primitive steps are partitioned into cohesive, overridable or modular sub-methods (KISS, SOLID, DRY).
 /// </summary>

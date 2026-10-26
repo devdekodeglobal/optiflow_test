@@ -1,57 +1,20 @@
 namespace DEKODE.OptiFlow.Domain.Entities.Enums;
 
-public enum MatchType
-{
-    Exact,
-    Similar,
-    Substitute,
-    Unresolved
-}
-
-public enum CommodityType
-{
-    Frame,
-    Sunglass
-}
-
-public enum StoreCategoryTier
-{
-    APlusPlus,
-    APlus,
-    A,
-    BPlus,
-    B,
-    C
-}
-
-public enum StoreType
-{
-    SIS,
-    EBO,
-    Optical,
-    Other
-}
-
-public enum DispatchPlan
-{
-    Weekly,
-    BiWeekly,
-    Monthly,
-    Custom
-}
-
 public static class StoreCategoryExtensions
 {
-    public static string ToTierCode(this StoreCategoryTier tier) => tier switch
+    extension(StoreCategoryTier tier)
     {
-        StoreCategoryTier.APlusPlus => "A++",
-        StoreCategoryTier.APlus => "A+",
-        StoreCategoryTier.A => "A",
-        StoreCategoryTier.BPlus => "B+",
-        StoreCategoryTier.B => "B",
-        StoreCategoryTier.C => "C",
-        _ => "B"
-    };
+        public string ToTierCode() => tier switch
+        {
+            StoreCategoryTier.APlusPlus => "A++",
+            StoreCategoryTier.APlus => "A+",
+            StoreCategoryTier.A => "A",
+            StoreCategoryTier.BPlus => "B+",
+            StoreCategoryTier.B => "B",
+            StoreCategoryTier.C => "C",
+            _ => "B"
+        };
+    }
 
     public static StoreCategoryTier ParseTier(string? value)
     {
