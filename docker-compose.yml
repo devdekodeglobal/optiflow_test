@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: optiflow_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: optiflow_db
+      POSTGRES_USER: optiflow_user
+      POSTGRES_PASSWORD: optiflow_password_2026
+    ports:
+      - "5433:5432"
+    volumes:
+      - optiflow_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U optiflow_user -d optiflow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: optiflow_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@dekode.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  optiflow_pgdata:

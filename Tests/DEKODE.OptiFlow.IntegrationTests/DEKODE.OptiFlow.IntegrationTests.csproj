@@ -10,6 +10,7 @@
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
     <PackageReference Include="FluentAssertions" Version="8.11.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.14" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.14" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="xunit" Version="2.9.3" />
@@ -25,6 +26,8 @@
     <ProjectReference Include="..\..\Business\DEKODE.OptiFlow.Domain.Interfaces\DEKODE.OptiFlow.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\..\Business\DEKODE.OptiFlow.Domain.BusinessServices\DEKODE.OptiFlow.Domain.BusinessServices.csproj" />
     <ProjectReference Include="..\..\Persistence\DEKODE.OptiFlow.DAL.Repository\DEKODE.OptiFlow.DAL.Repository.csproj" />
+    <ProjectReference Include="..\..\Application\DEKODE.OptiFlow.DTO\DEKODE.OptiFlow.DTO.csproj" />
+    <ProjectReference Include="..\..\Application\DEKODE.OptiFlow.WebAPI\DEKODE.OptiFlow.WebAPI.csproj" />
   </ItemGroup>
 
 </Project>

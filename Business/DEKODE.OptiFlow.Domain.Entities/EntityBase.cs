@@ -2,7 +2,7 @@ namespace DEKODE.OptiFlow.Domain.Entities;
 
 public abstract class EntityBase
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; } = Guid.Empty;
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAtUtc { get; set; }
     public byte[]? ConcurrencyToken { get; set; }

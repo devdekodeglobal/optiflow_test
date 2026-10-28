@@ -5,7 +5,7 @@ namespace DEKODE.OptiFlow.Domain.Entities;
 
 public class PlanogramLine : EntityBase
 {
-    public int PlanogramId { get; set; }
+    public Guid PlanogramId { get; set; }
     public Planogram? Planogram { get; set; }
 
     public string StoreBrandProductTypeKey { get; set; } = string.Empty;

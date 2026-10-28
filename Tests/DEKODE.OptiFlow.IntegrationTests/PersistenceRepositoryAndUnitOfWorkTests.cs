@@ -78,7 +78,7 @@ public class PersistenceRepositoryAndUnitOfWorkTests
         });
 
         // Assert
-        result.Should().BeGreaterThan(0);
+        result.Should().NotBeEmpty();
         var saved = await uow.Planograms.GetByIdAsync(result);
         saved.Should().NotBeNull();
         saved!.Name.Should().Be("Tx_Planogram");

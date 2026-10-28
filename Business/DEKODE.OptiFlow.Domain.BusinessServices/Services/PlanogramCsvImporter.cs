@@ -2,16 +2,23 @@ using DEKODE.OptiFlow.Domain.Entities;
 using DEKODE.OptiFlow.Domain.Entities.Enums;
 using DEKODE.OptiFlow.Domain.Entities.Exceptions;
 using DEKODE.OptiFlow.Domain.Interfaces;
+using DEKODE.OptiFlow.Domain.Interfaces.Parsing;
 using System.Globalization;
 
 namespace DEKODE.OptiFlow.Domain.BusinessServices.Services;
 
 /// <summary>
-/// Imports raw merchandising CSVs (such as Planogram.csv) into domain aggregates.
-/// Handles messy header rows, alternative aliases, data coercion, and domain validations.
+/// Parser utility for raw merchandising CSVs (e.g. Planogram.csv).
+/// Implements IPlanogramCsvParser for pure in-memory parsing and IPlanogramImporter for backward compatibility.
 /// </summary>
-public class PlanogramCsvImporter : IPlanogramImporter
+public class PlanogramCsvImporter : IPlanogramImporter, IPlanogramCsvParser
 {
+    public Task<Planogram> ParseFromCsvFileAsync(string filePath, string planogramName, CancellationToken cancellationToken = default) =>
+        ImportFromCsvFileAsync(filePath, planogramName, cancellationToken);
+
+    public Task<Planogram> ParseFromCsvStreamAsync(Stream csvStream, string planogramName, CancellationToken cancellationToken = default) =>
+        ImportFromCsvStreamAsync(csvStream, planogramName, cancellationToken);
+
     public async Task<Planogram> ImportFromCsvFileAsync(string filePath, string planogramName, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(filePath))

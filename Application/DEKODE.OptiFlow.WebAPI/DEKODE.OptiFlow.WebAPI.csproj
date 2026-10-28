@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Scalar.AspNetCore" Version="2.18.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.3.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DEKODE.OptiFlow.DTO\DEKODE.OptiFlow.DTO.csproj" />
+    <ProjectReference Include="..\..\Business\DEKODE.OptiFlow.Domain.Entities\DEKODE.OptiFlow.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\Business\DEKODE.OptiFlow.Domain.Interfaces\DEKODE.OptiFlow.Domain.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\DEKODE.OptiFlow.Infrastructure\DEKODE.OptiFlow.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

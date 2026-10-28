@@ -6,7 +6,6 @@ public interface IUnitOfWork : IDisposable, IAsyncDisposable
 {
     IPlanogramRepository Planograms { get; }
     IAllocationRepository Allocations { get; }
-    IRepository<PlanogramLine> PlanogramLines { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);

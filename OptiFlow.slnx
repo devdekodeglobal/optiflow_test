@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Application/">
+    <Project Path="Application/DEKODE.OptiFlow.DTO/DEKODE.OptiFlow.DTO.csproj" />
+    <Project Path="Application/DEKODE.OptiFlow.WebAPI/DEKODE.OptiFlow.WebAPI.csproj" />
+  </Folder>
   <Folder Name="/Business/">
     <Project Path="Business/DEKODE.OptiFlow.Domain.Entities/DEKODE.OptiFlow.Domain.Entities.csproj" />
     <Project Path="Business/DEKODE.OptiFlow.Domain.Interfaces/DEKODE.OptiFlow.Domain.Interfaces.csproj" />
@@ -12,4 +16,3 @@
     <Project Path="Tests/DEKODE.OptiFlow.UnitTests/DEKODE.OptiFlow.UnitTests.csproj" />
   </Folder>
 </Solution>
-

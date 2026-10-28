@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Business\DEKODE.OptiFlow.Domain.Interfaces\DEKODE.OptiFlow.Domain.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Business\DEKODE.OptiFlow.Domain.BusinessServices\DEKODE.OptiFlow.Domain.BusinessServices.csproj" />
+    <ProjectReference Include="..\..\Persistence\DEKODE.OptiFlow.DAL.Repository\DEKODE.OptiFlow.DAL.Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" Version="10.0.0-preview.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.14" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

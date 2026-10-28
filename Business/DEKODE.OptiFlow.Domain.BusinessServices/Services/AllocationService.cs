@@ -37,6 +37,30 @@ public class AllocationService : IAllocationService
         };
     }
 
+    public AllocationCalculationResult CalculateAllocationWithResult(AllocationExecutionContext context)
+    {
+        if (context == null)
+            return AllocationCalculationResult.Failure("Execution context cannot be null.");
+
+        if (context.PlanogramLines == null || context.PlanogramLines.Count == 0)
+            return AllocationCalculationResult.Failure("Execution context must contain at least one planogram line.");
+
+        var warnings = new List<string>();
+
+        if (context.WarehouseBatches == null || context.WarehouseBatches.Count == 0)
+            warnings.Add("Warehouse batches list is empty; no items could be dispatched.");
+
+        try
+        {
+            var allocation = CalculateAllocation(context);
+            return AllocationCalculationResult.Success(allocation, warnings);
+        }
+        catch (Exception ex)
+        {
+            return AllocationCalculationResult.Failure(ex.Message, warnings);
+        }
+    }
+
     public async Task<Allocation> RunAndPersistAllocationAsync(AllocationExecutionContext context, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -55,5 +79,13 @@ public class AllocationService : IAllocationService
         }, cancellationToken);
 
         return allocation;
+    }
+
+    public async Task<Allocation?> GetAllocationByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        if (_unitOfWork == null)
+            throw new InvalidOperationException("UnitOfWork is not configured for allocation data access.");
+
+        return await _unitOfWork.Allocations.GetWithLinesByIdAsync(id, cancellationToken);
     }
 }
