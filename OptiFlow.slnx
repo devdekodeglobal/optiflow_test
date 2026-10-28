@@ -8,6 +8,9 @@
     <Project Path="Business/DEKODE.OptiFlow.Domain.Interfaces/DEKODE.OptiFlow.Domain.Interfaces.csproj" />
     <Project Path="Business/DEKODE.OptiFlow.Domain.BusinessServices/DEKODE.OptiFlow.Domain.BusinessServices.csproj" />
   </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/DEKODE.OptiFlow.Infrastructure/DEKODE.OptiFlow.Infrastructure.csproj" />
+  </Folder>
   <Folder Name="/Persistence/">
     <Project Path="Persistence/DEKODE.OptiFlow.DAL.Repository/DEKODE.OptiFlow.DAL.Repository.csproj" />
   </Folder>
