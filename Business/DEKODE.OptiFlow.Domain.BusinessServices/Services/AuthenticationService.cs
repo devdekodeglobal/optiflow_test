@@ -5,52 +5,50 @@ using DEKODE.OptiFlow.Domain.Interfaces.Auth;
 namespace DEKODE.OptiFlow.Domain.BusinessServices.Services;
 
 /// <summary>
-/// Domain authentication service implementing secure credential verification with PBKDF2/SHA256 password hashing.
-/// Decouples authentication from HTTP controllers and allows seamless swapping for Postgres user tables or external IdPs.
+/// Domain authentication service implementing secure credential verification with PBKDF2/SHA256 password hashing
+/// backed by the database via IUserRepository.
 /// </summary>
 public class AuthenticationService : IAuthenticationService
 {
-    private record UserRecord(string Username, string Role, string DisplayName, string PasswordHash, string Salt);
+    private readonly IUserRepository _userRepository;
 
-    // In-memory credential store with cryptographically salted hashes for testing / default setup
-    private readonly Dictionary<string, UserRecord> _users = new(StringComparer.OrdinalIgnoreCase);
-
-    public AuthenticationService()
+    public AuthenticationService(IUserRepository userRepository)
     {
-        // Seed default development accounts with salted hashes
-        SeedUser("admin", "Admin", "OptiFlow Administrator", "optiflow2026");
-        SeedUser("planner", "User", "Merchandising Planner", "planner2026");
+        _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
     }
 
-    public Task<AuthUser?> ValidateCredentialsAsync(string username, string password, CancellationToken cancellationToken = default)
+    public async Task<AuthUser?> ValidateCredentialsAsync(string username, string password, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-            return Task.FromResult<AuthUser?>(null);
+            return null;
 
-        if (!_users.TryGetValue(username, out var user))
-            return Task.FromResult<AuthUser?>(null);
+        var normalizedUsername = username.Trim().ToUpperInvariant();
+        var user = await _userRepository.GetByNormalizedUsernameAsync(normalizedUsername, cancellationToken);
+        if (user == null || !user.IsActive)
+            return null;
 
-        bool isValid = VerifyPassword(password, user.PasswordHash, user.Salt);
+        // Check for lockout
+        if (user.LockoutEndUtc.HasValue && user.LockoutEndUtc.Value > DateTime.UtcNow)
+            return null;
+
+        bool isValid = VerifyPassword(password, user.PasswordHash, user.PasswordSalt);
         if (!isValid)
-            return Task.FromResult<AuthUser?>(null);
+        {
+            await _userRepository.RecordFailedLoginAsync(user.Id, cancellationToken);
+            return null;
+        }
 
-        return Task.FromResult<AuthUser?>(new AuthUser
+        await _userRepository.RecordSuccessfulLoginAsync(user.Id, cancellationToken);
+
+        return new AuthUser
         {
             Username = user.Username,
             Role = user.Role,
             DisplayName = user.DisplayName
-        });
+        };
     }
 
-    private void SeedUser(string username, string role, string displayName, string password)
-    {
-        byte[] saltBytes = RandomNumberGenerator.GetBytes(16);
-        string salt = Convert.ToBase64String(saltBytes);
-        string hash = HashPassword(password, saltBytes);
-        _users[username] = new UserRecord(username, role, displayName, hash, salt);
-    }
-
-    private static string HashPassword(string password, byte[] salt)
+    public static string HashPassword(string password, byte[] salt)
     {
         byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
             Encoding.UTF8.GetBytes(password),
@@ -62,9 +60,9 @@ public class AuthenticationService : IAuthenticationService
         return Convert.ToBase64String(hash);
     }
 
-    private static bool VerifyPassword(string password, string storedHash, string saltString)
+    public static bool VerifyPassword(string password, string storedHash, string storedSalt)
     {
-        byte[] salt = Convert.FromBase64String(saltString);
+        byte[] salt = Convert.FromBase64String(storedSalt);
         string computedHash = HashPassword(password, salt);
         return CryptographicOperations.FixedTimeEquals(
             Encoding.UTF8.GetBytes(computedHash),

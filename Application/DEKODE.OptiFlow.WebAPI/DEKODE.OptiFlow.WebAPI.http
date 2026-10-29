@@ -1,6 +1,0 @@
-@DEKODE.OptiFlow.WebAPI_HostAddress = http://localhost:5106
-
-GET {{DEKODE.OptiFlow.WebAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

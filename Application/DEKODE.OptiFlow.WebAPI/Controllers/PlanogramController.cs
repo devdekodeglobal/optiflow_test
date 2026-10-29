@@ -23,10 +23,13 @@ public class PlanogramController : ControllerBase
     /// <summary>
     /// Uploads and parses a raw planogram CSV file (e.g. Planogram.csv), validates merchandising constraints,
     /// and persists it atomically with its target lines via Business Services.
+    /// Requires Admin role.
     /// </summary>
     [HttpPost("upload-csv")]
+    [Authorize(Roles = "Admin")]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<PlanogramImportResponseDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> UploadCsv(
         IFormFile file,

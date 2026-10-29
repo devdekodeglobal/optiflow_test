@@ -12,6 +12,8 @@ public class OptiFlowDbContext : DbContext
 
     public DbSet<FacilityTypeDbModel> FacilityTypes => Set<FacilityTypeDbModel>();
     public DbSet<FacilityDbModel> Facilities => Set<FacilityDbModel>();
+    public DbSet<RoleDbModel> Roles => Set<RoleDbModel>();
+    public DbSet<UserDbModel> Users => Set<UserDbModel>();
     public DbSet<BrandCategoryDbModel> BrandCategories => Set<BrandCategoryDbModel>();
     public DbSet<BrandDbModel> Brands => Set<BrandDbModel>();
     public DbSet<SupplierDbModel> Suppliers => Set<SupplierDbModel>();
@@ -247,6 +249,11 @@ public class OptiFlowDbContext : DbContext
                 .WithOne(l => l.Planogram)
                 .HasForeignKey(l => l.PlanogramId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.CreatedByUser)
+                .WithMany(u => u.CreatedPlanograms)
+                .HasForeignKey(e => e.CreatedByUserId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         // PlanogramLine Configuration
@@ -280,6 +287,89 @@ public class OptiFlowDbContext : DbContext
                 .WithOne(l => l.Allocation)
                 .HasForeignKey(l => l.AllocationId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.User)
+                .WithMany(u => u.Allocations)
+                .HasForeignKey(e => e.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // Role Configuration
+        modelBuilder.Entity<RoleDbModel>(entity =>
+        {
+            entity.ToTable("roles");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Code).IsRequired().HasMaxLength(50);
+            entity.HasIndex(e => e.Code).IsUnique();
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+
+            entity.HasData(
+                new RoleDbModel
+                {
+                    Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    Code = "Admin",
+                    Name = "Administrator",
+                    Description = "Full administrative access",
+                    IsActive = true,
+                    CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new RoleDbModel
+                {
+                    Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                    Code = "Planner",
+                    Name = "Merchandise Planner",
+                    Description = "Can run allocations and review store gap reports",
+                    IsActive = true,
+                    CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                },
+                new RoleDbModel
+                {
+                    Id = Guid.Parse("33333333-3333-3333-3333-333333333333"),
+                    Code = "StoreManager",
+                    Name = "Store Manager",
+                    Description = "Store dispatch views",
+                    IsActive = true,
+                    CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                }
+            );
+        });
+
+        // User Configuration
+        modelBuilder.Entity<UserDbModel>(entity =>
+        {
+            entity.ToTable("users");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Username).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.NormalizedUsername).IsRequired().HasMaxLength(100);
+            entity.HasIndex(e => e.NormalizedUsername).IsUnique();
+            entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
+            entity.Property(e => e.NormalizedEmail).IsRequired().HasMaxLength(255);
+            entity.HasIndex(e => e.NormalizedEmail).IsUnique();
+            entity.Property(e => e.DisplayName).IsRequired().HasMaxLength(150);
+            entity.Property(e => e.PasswordHash).IsRequired();
+            entity.Property(e => e.PasswordSalt).IsRequired();
+
+            entity.HasOne(e => e.Role)
+                .WithMany(r => r.Users)
+                .HasForeignKey(e => e.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasData(
+                new UserDbModel
+                {
+                    Id = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                    Username = "admin",
+                    NormalizedUsername = "ADMIN",
+                    Email = "admin@dekode.io",
+                    NormalizedEmail = "ADMIN@DEKODE.IO",
+                    DisplayName = "OptiFlow Administrator",
+                    PasswordHash = "J0YZgWm8TIvP6h9+atZ6M07yoblgeRLhhH5Egfutbr8=", // optiflow2026
+                    PasswordSalt = "V2Zsb3dTYWx0MjAyNg==",
+                    RoleId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    IsActive = true,
+                    CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                }
+            );
         });
 
         // AllocationLine Configuration

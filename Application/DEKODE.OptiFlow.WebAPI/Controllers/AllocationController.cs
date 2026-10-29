@@ -23,9 +23,12 @@ public class AllocationController : ControllerBase
     /// <summary>
     /// Pure calculation endpoint. Runs the allocation waterfall in memory without fetching or persisting to database.
     /// Ideal for simulations, dry-runs, and scenario testing.
+    /// Requires Admin role.
     /// </summary>
     [HttpPost("calculate")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<AllocationResultDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public IActionResult Calculate([FromBody] AllocationExecutionRequestDto request)
     {
@@ -52,9 +55,12 @@ public class AllocationController : ControllerBase
     /// <summary>
     /// Runs allocation calculation using the supplied payload, and persists the generated lines
     /// and KPIs atomically to the database using Unit of Work transactions.
+    /// Requires Admin role.
     /// </summary>
     [HttpPost("run")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(typeof(ApiResponse<AllocationResultDto>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> RunAndPersist([FromBody] AllocationExecutionRequestDto request, CancellationToken cancellationToken)
     {

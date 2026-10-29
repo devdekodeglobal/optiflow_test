@@ -31,8 +31,7 @@ public static class ServiceCollectionExtensions
                 {
                     npgsqlOptions.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorCodesToAdd: null);
                     npgsqlOptions.MigrationsHistoryTable("__ef_migrations_history", "public");
-                })
-                .UseSnakeCaseNamingConvention();
+                });
             }
             else
             {
@@ -43,6 +42,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<DEKODE.OptiFlow.Domain.Interfaces.Auth.IUserRepository, UserRepository>();
 
         // 2. Business Services registration
         services.AddScoped<IItemAttributeParser, ItemAttributeParser>();

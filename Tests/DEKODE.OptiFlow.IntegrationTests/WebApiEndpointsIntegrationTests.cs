@@ -39,6 +39,12 @@ public class WebApiEndpointsIntegrationTests : IClassFixture<WebApplicationFacto
                     options.UseInMemoryDatabase("OptiFlow_Test_InMemoryDb")
                            .ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning));
                 });
+
+                // Ensure seed data is populated in the in-memory database
+                var sp = services.BuildServiceProvider();
+                using var scope = sp.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<OptiFlowDbContext>();
+                db.Database.EnsureCreated();
             });
         }).CreateClient();
     }
