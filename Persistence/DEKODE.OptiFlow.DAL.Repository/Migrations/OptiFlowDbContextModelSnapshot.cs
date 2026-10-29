@@ -60,9 +60,14 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
                     b.Property<DateTime?>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SourceFacilityId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("allocations", (string)null);
                 });
@@ -488,6 +493,9 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("EffectiveDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -519,6 +527,8 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedByUserId");
 
                     b.HasIndex("FacilityId");
 
@@ -791,6 +801,74 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
                     b.ToTable("product_suppliers", (string)null);
                 });
 
+            modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.RoleDbModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .HasColumnType("bytea");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("roles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Code = "Admin",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Full administrative access",
+                            IsActive = true,
+                            Name = "Administrator"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Code = "Planner",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Can run allocations and review store gap reports",
+                            IsActive = true,
+                            Name = "Merchandise Planner"
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            Code = "StoreManager",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Store dispatch views",
+                            IsActive = true,
+                            Name = "Store Manager"
+                        });
+                });
+
             modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.SalesRecordDbModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -898,6 +976,99 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
                     b.ToTable("suppliers", (string)null);
                 });
 
+            modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.UserDbModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("ConcurrencyToken")
+                        .HasColumnType("bytea");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<int>("FailedLoginAttempts")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastLoginAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("LockoutEndUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NormalizedEmail")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("NormalizedUsername")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PasswordSalt")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .IsUnique();
+
+                    b.HasIndex("NormalizedUsername")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("users", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"),
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            DisplayName = "OptiFlow Administrator",
+                            Email = "admin@dekode.io",
+                            FailedLoginAttempts = 0,
+                            IsActive = true,
+                            NormalizedEmail = "ADMIN@DEKODE.IO",
+                            NormalizedUsername = "ADMIN",
+                            PasswordHash = "J0YZgWm8TIvP6h9+atZ6M07yoblgeRLhhH5Egfutbr8=",
+                            PasswordSalt = "V2Zsb3dTYWx0MjAyNg==",
+                            RoleId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Username = "admin"
+                        });
+                });
+
             modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.AllocationDbModel", b =>
                 {
                     b.HasOne("DEKODE.OptiFlow.DAL.Repository.Models.FacilityDbModel", "SourceFacility")
@@ -905,7 +1076,14 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
                         .HasForeignKey("SourceFacilityId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("DEKODE.OptiFlow.DAL.Repository.Models.UserDbModel", "User")
+                        .WithMany("Allocations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("SourceFacility");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.AllocationLineDbModel", b =>
@@ -984,11 +1162,18 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
 
             modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.PlanogramDbModel", b =>
                 {
+                    b.HasOne("DEKODE.OptiFlow.DAL.Repository.Models.UserDbModel", "CreatedByUser")
+                        .WithMany("CreatedPlanograms")
+                        .HasForeignKey("CreatedByUserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("DEKODE.OptiFlow.DAL.Repository.Models.FacilityDbModel", "Facility")
                         .WithMany("Planograms")
                         .HasForeignKey("FacilityId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("CreatedByUser");
 
                     b.Navigation("Facility");
                 });
@@ -1072,6 +1257,17 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
                     b.Navigation("ProductItem");
                 });
 
+            modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.UserDbModel", b =>
+                {
+                    b.HasOne("DEKODE.OptiFlow.DAL.Repository.Models.RoleDbModel", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.AllocationDbModel", b =>
                 {
                     b.Navigation("Lines");
@@ -1128,11 +1324,23 @@ namespace DEKODE.OptiFlow.DAL.Repository.Migrations
                     b.Navigation("SalesRecords");
                 });
 
+            modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.RoleDbModel", b =>
+                {
+                    b.Navigation("Users");
+                });
+
             modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.SupplierDbModel", b =>
                 {
                     b.Navigation("InventoryStocks");
 
                     b.Navigation("SuppliedProducts");
+                });
+
+            modelBuilder.Entity("DEKODE.OptiFlow.DAL.Repository.Models.UserDbModel", b =>
+                {
+                    b.Navigation("Allocations");
+
+                    b.Navigation("CreatedPlanograms");
                 });
 #pragma warning restore 612, 618
         }

@@ -18,4 +18,8 @@
     <Project Path="Tests/DEKODE.OptiFlow.IntegrationTests/DEKODE.OptiFlow.IntegrationTests.csproj" />
     <Project Path="Tests/DEKODE.OptiFlow.UnitTests/DEKODE.OptiFlow.UnitTests.csproj" />
   </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="docker-compose.yml" />
+    <File Path="README.md" />
+  </Folder>
 </Solution>
