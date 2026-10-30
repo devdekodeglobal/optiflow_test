@@ -17,7 +17,8 @@ services:
       test: ["CMD-SHELL", "pg_isready -U optiflow_user -d optiflow_db"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+      start_period: 20s
 
   pgadmin:
     image: dpage/pgadmin4:latest
